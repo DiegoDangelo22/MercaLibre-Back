@@ -1,0 +1,102 @@
+package com.merca.back.controller;
+
+import com.merca.back.dto.RopaDto;
+import com.merca.back.model.Ropa;
+import com.merca.back.repository.RopaRepository;
+import com.merca.back.security.controller.Mensaje;
+import com.merca.back.service.RopaService;
+import java.math.BigInteger;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/ropa")
+@CrossOrigin(origins = "http://localhost:4200")
+public class RopaController {
+    @Autowired
+    RopaService ropaService;
+    @Autowired
+    private EntityManager entityManager;
+    
+    @GetMapping("/autoincrement")
+    public Integer getAutoincrement() {
+        Query query = entityManager.createNativeQuery("SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'merca' AND TABLE_NAME = 'ropa'");
+        return ((BigInteger) query.getSingleResult()).intValue();
+    }
+    
+    @GetMapping("/por-categoria/{id}")
+    public ResponseEntity<List<Ropa>> getByCategoria(@PathVariable int id) {
+        List<Ropa> ropas = ropaService.findByCategoria(id);
+        return new ResponseEntity<>(ropas, HttpStatus.OK);
+    }
+    
+    @GetMapping("/por-color/{id}")
+    public ResponseEntity<List<Ropa>> getByColor(@PathVariable int id) {
+        List<Ropa> ropas = ropaService.findByColor(id);
+        return new ResponseEntity<>(ropas, HttpStatus.OK);
+    }
+    
+    @GetMapping("/buscar")
+    public List<RopaDto> buscarRopa2(@RequestParam String termino) {
+        return ropaService.buscarRopa(termino);
+    }
+
+    @PostMapping("/buscar")
+    public ResponseEntity<List<RopaDto>> buscarRopa(@RequestBody String termino) {
+        List<RopaDto> listaRopaDto = ropaService.buscarRopa(termino);
+        return new ResponseEntity<>(listaRopaDto, HttpStatus.OK);
+    }
+    
+    @GetMapping("/lista")
+    public ResponseEntity<List<Ropa>> list() {
+        List<Ropa> list = ropaService.list();
+        return new ResponseEntity(list, HttpStatus.OK);
+    }
+    
+    @PostMapping("/create")
+    public ResponseEntity<?> create(@RequestBody RopaDto ropaDto) {
+        Ropa ropa = new Ropa(ropaDto.getNombre(), ropaDto.getDescripcion(), ropaDto.getImagen(), ropaDto.getColor(), ropaDto.getPrecio(), ropaDto.getCategoria());
+        ropaService.save(ropa);
+        return new ResponseEntity(new Mensaje("Ropa guardada correctamente"), HttpStatus.OK);
+    }
+    
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<Ropa> getById(@PathVariable("id") int id) {
+        Ropa ropa = ropaService.getOne(id).get();
+        return new ResponseEntity(ropa, HttpStatus.OK);
+    }
+    
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> update(@PathVariable("id") int id, @RequestBody RopaDto ropaDto) {
+        Ropa ropa = ropaService.getOne(id).get();
+        ropa.setNombre(ropaDto.getNombre());
+        ropa.setDescripcion(ropaDto.getDescripcion());
+        ropa.setImagen(ropaDto.getImagen());
+        ropa.setCategoria(ropaDto.getCategoria());
+        ropa.setColor(ropaDto.getColor());
+        ropa.setPrecio(ropaDto.getPrecio());
+        ropaService.save(ropa);
+        return new ResponseEntity(new Mensaje("Ropa actualizada correctamente"), HttpStatus.OK);
+    }
+    
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") int id) {
+        ropaService.delete(id);
+        return new ResponseEntity(new Mensaje("Ropa eliminada correctamente"), HttpStatus.OK);
+    }
+}
