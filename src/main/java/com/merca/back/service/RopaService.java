@@ -1,6 +1,7 @@
 package com.merca.back.service;
 
 import com.merca.back.dto.RopaDto;
+import com.merca.back.model.Color;
 import com.merca.back.model.Ropa;
 import com.merca.back.repository.RopaRepository;
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class RopaService {
         List<Ropa> listaRopa = ropaRepository.findByNombreContainingIgnoreCase(termino);
         List<RopaDto> listaRopaDto = new ArrayList<>();
         for(Ropa ropa: listaRopa) {
-            listaRopaDto.add(new RopaDto(ropa.getNombre(), ropa.getDescripcion(), ropa.getImagen(), ropa.getColor(), ropa.getPrecio(), ropa.getCategoria()));
+            listaRopaDto.add(new RopaDto(ropa.getNombre(), ropa.getDescripcion(), ropa.getImagenesColor(), ropa.getColores(), ropa.getPrecio(), ropa.getCategoria()));
         } return listaRopaDto;
     }
     
@@ -32,8 +33,8 @@ public class RopaService {
         return ropaRepository.findByCategoriaId(categoriaId);
     }
     
-    public List<Ropa> findByColor(int colorId) {
-        return ropaRepository.findByColorId(colorId);
+    public List<Ropa> findByColor(int colores) {
+        return ropaRepository.findByColores(colores);
     }
     
     public Optional<Ropa> getOne(int id) {

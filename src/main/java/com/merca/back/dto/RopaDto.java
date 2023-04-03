@@ -2,6 +2,10 @@ package com.merca.back.dto;
 
 import com.merca.back.model.Categoria;
 import com.merca.back.model.Color;
+import com.merca.back.model.ImagenColor;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
@@ -15,9 +19,9 @@ public class RopaDto {
     @NotBlank
     private String descripcion;
     @NotBlank
-    private String imagen;
+    private List<ImagenColor> imagenesColor;
     @NotNull
-    private Color color;
+    private Set<Color> colores;
     @NotNull
     private int precio;
     @NotNull
@@ -25,12 +29,17 @@ public class RopaDto {
 
     public RopaDto() {}
 
-    public RopaDto(String nombre, String descripcion, String imagen, Color color, int precio, Categoria categoria) {
+    public RopaDto(String nombre, String descripcion, List<ImagenColor> imagenesColor, Set<Color> colores, int precio, Categoria categoria) {
         this.nombre = nombre;
         this.descripcion = descripcion;
-        this.imagen = imagen;
-        this.color = color;
+        this.imagenesColor = imagenesColor;
+        this.colores = colores;
         this.precio = precio;
         this.categoria = categoria;
     }
+    
+//    public List<Integer> getColorIds() {
+//        return colores.stream().map(Color::getId).collect(Collectors.toList());
+//    }
+
 }

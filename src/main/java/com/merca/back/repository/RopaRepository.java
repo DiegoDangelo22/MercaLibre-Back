@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface RopaRepository extends JpaRepository<Ropa, Integer> {
     public Optional<Ropa> findByNombre(String nombreRopa);
     public List<Ropa> findByCategoriaId(int categoriaId);
-    public List<Ropa> findByColorId(int colorId);
+    public List<Ropa> findByColores(int colores);
     public List<Ropa> findByNombreContainingIgnoreCase(String termino);
     public boolean existsByNombre(String nombreRopa);
 }
