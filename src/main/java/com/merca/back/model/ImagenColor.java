@@ -27,18 +27,18 @@ public class ImagenColor implements Serializable {
     @NotBlank
     private String nombre;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "color_id", referencedColumnName = "id")
+    @JoinColumn(name = "color_id")
 //    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-//    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-//      property = "id")
-//    @JsonIdentityReference(alwaysAsId = true)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+      property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     private Color color;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "ropa_id", referencedColumnName = "id")
+    @JoinColumn(name = "ropa_id")
 //@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-//    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-//      property = "id")
-//    @JsonIdentityReference(alwaysAsId = true)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+      property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     private Ropa ropa;
 
     public ImagenColor() {}

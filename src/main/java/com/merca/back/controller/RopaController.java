@@ -167,7 +167,7 @@ public class RopaController {
 //}
     
     
-@PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
+@PostMapping(value = "/create")
 public ResponseEntity<?> create(@RequestBody RopaDto ropaDto) {
     // Crear la instancia de Ropa
     Ropa ropa = new Ropa(ropaDto.getNombre(), ropaDto.getDescripcion(), ropaDto.getPrecio(), ropaDto.getCategoria());
@@ -188,28 +188,29 @@ for (Color color : ropaDto.getColores()) {
     colores.add(colorService.getOne(color.getId()).get());
 }
 
-// Crear un conjunto de imágenes para la prenda
 Set<ImagenColor> imagenesColor = new HashSet<>();
 
-// Obtener las imágenes asociadas a cada color de la prenda y agregarlas al conjunto de imágenes de la prenda
-for (Color color : colores) {
-    for (ImagenColor imagenColorDto : color.getImagenesColor()) {
-        // Verificar que la instancia de Color sea válida
-        if (imagenColorDto.getColor() != null && imagenColorDto.getColor().getId() == color.getId()) {
+for (ImagenColor imagenColorDto : ropaDto.getImagenesColor()) {
+    // Verificar que la instancia de Color sea válida
+    if (imagenColorDto.getColor() != null) {
+        // Obtener el color asociado a la imagen
+        Color color = colorService.getOne(imagenColorDto.getColor().getId()).orElse(null);
+        if (color != null) {
             // Crear una instancia de ImagenColor y asignar la ropa y el color
             ImagenColor imagenColor = new ImagenColor(imagenColorDto.getNombre(), color, ropa);
-
             imagenColor.setColor(color);
             imagenColor.setRopa(ropa);
-
             imagenesColor.add(imagenColor);
             // Guardar la instancia de ImagenColor en la base de datos
             imagenColorService.save(imagenColor);
         }
     }
 }
-// Asignar el conjunto de imágenes a la prenda
+
+// Asignar el conjunto de imágenes de la prenda y guardar la instancia de Ropa en la base de datos
 ropa.setImagenesColor(imagenesColor);
+ropaService.save(ropa);
+
 
 // Crear una instancia de RopaColor por cada color y guardarla en la base de datos
 for (Color color : colores) {

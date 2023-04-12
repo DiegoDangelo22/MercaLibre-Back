@@ -39,12 +39,12 @@ public class Color implements Serializable {
     @Fetch(FetchMode.JOIN)
     @ElementCollection(fetch = FetchType.EAGER)
     @ManyToMany(mappedBy = "colores")
-//    @JsonIgnore
+    @JsonIgnore
     private Set<Ropa> ropa = new HashSet<>();
     @Fetch(FetchMode.JOIN)
     @ElementCollection(fetch = FetchType.EAGER)
     @OneToMany(mappedBy = "color", cascade = CascadeType.ALL, orphanRemoval = true)
-//    @JsonIgnore este tengo que descomentar
+    @JsonIgnore
 //        @JsonIgnoreProperties({"ropas", "color"})
     
 //    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,

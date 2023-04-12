@@ -40,7 +40,7 @@ public class Ropa implements Serializable {
     @NotNull
     private int precio;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "categoria_id", referencedColumnName = "id")
+    @JoinColumn(name = "categoria_id")
     private Categoria categoria;
     @Fetch(FetchMode.JOIN)
     @ElementCollection(fetch = FetchType.EAGER)
