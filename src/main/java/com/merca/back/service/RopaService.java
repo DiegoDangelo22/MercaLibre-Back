@@ -2,11 +2,13 @@ package com.merca.back.service;
 
 import com.merca.back.dto.RopaDto;
 import com.merca.back.model.Color;
+import com.merca.back.model.ImagenColor;
 import com.merca.back.model.Ropa;
 import com.merca.back.repository.RopaRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,25 @@ import org.springframework.stereotype.Service;
 public class RopaService {
     @Autowired
     RopaRepository ropaRepository;
+   
+  public void agregarColor(int id, Color color) {
+    Optional<Ropa> optionalRopa = ropaRepository.findById(id);
+    if (optionalRopa.isPresent()) {
+        Ropa ropa = optionalRopa.get();
+        Set<Color> colores = ropa.getColores();
+        colores.add(color);
+        ropa.setColores(colores);
+        ropaRepository.save(ropa);
+    } else {
+        // Manejo del caso en que no se encuentre la ropa con el id dado
+    }
+}
+  
+  
+  public Set<ImagenColor> findImagenesByRopaIdAndColorId(int ropaId, int colorId) {
+        return ropaRepository.findImagenesByRopaIdAndColorId(ropaId, colorId);
+    }
+
     
     public List<Ropa> list() {
         return ropaRepository.findAll();

@@ -1,5 +1,9 @@
 package com.merca.back.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -16,17 +20,25 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "imagen_color")
-public class ImagenColor {
+public class ImagenColor implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @NotBlank
     private String nombre;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "color_id")
+    @JoinColumn(name = "color_id", referencedColumnName = "id")
+//    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+//    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+//      property = "id")
+//    @JsonIdentityReference(alwaysAsId = true)
     private Color color;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "ropa_id")
+    @JoinColumn(name = "ropa_id", referencedColumnName = "id")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+//    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+//      property = "id")
+//    @JsonIdentityReference(alwaysAsId = true)
     private Ropa ropa;
 
     public ImagenColor() {}

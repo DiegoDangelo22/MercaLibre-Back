@@ -19,7 +19,7 @@ public class RopaDto {
     @NotBlank
     private String descripcion;
     @NotBlank
-    private List<ImagenColor> imagenesColor;
+    private Set<ImagenColor> imagenesColor;
     @NotNull
     private Set<Color> colores;
     @NotNull
@@ -29,7 +29,7 @@ public class RopaDto {
 
     public RopaDto() {}
 
-    public RopaDto(String nombre, String descripcion, List<ImagenColor> imagenesColor, Set<Color> colores, int precio, Categoria categoria) {
+    public RopaDto(String nombre, String descripcion, Set<ImagenColor> imagenesColor, Set<Color> colores, int precio, Categoria categoria) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.imagenesColor = imagenesColor;

@@ -15,13 +15,13 @@ public class ImagenColorDto {
     @NotNull
     private Color color;
     @NotNull
-    private Ropa ropa;
+    private Ropa ropas;
 
     public ImagenColorDto() {}
 
-    public ImagenColorDto(String nombre, Color color, Ropa ropa) {
+    public ImagenColorDto(String nombre, Color color, Ropa ropas) {
         this.nombre = nombre;
         this.color = color;
-        this.ropa = ropa;
+        this.ropas = ropas;
     }
 }

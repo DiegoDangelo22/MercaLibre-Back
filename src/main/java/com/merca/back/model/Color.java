@@ -1,8 +1,12 @@
 package com.merca.back.model;
 
-import java.util.ArrayList;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import java.io.Serializable;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
@@ -24,7 +28,7 @@ import org.hibernate.annotations.FetchMode;
 @Setter
 @Entity
 @Table(name = "color")
-public class Color {
+public class Color implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -35,11 +39,18 @@ public class Color {
     @Fetch(FetchMode.JOIN)
     @ElementCollection(fetch = FetchType.EAGER)
     @ManyToMany(mappedBy = "colores")
-    private Set<Ropa> ropas = new HashSet<>();
+//    @JsonIgnore
+    private Set<Ropa> ropa = new HashSet<>();
     @Fetch(FetchMode.JOIN)
     @ElementCollection(fetch = FetchType.EAGER)
-    @OneToMany(mappedBy = "ropa", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ImagenColor> imagenesColor = new ArrayList<>();
+    @OneToMany(mappedBy = "color", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @JsonIgnore este tengo que descomentar
+//        @JsonIgnoreProperties({"ropas", "color"})
+    
+//    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+//      property = "id")
+//    @JsonIdentityReference(alwaysAsId = true)
+    private Set<ImagenColor> imagenesColor = new HashSet<>();
     
 
     public Color() {}

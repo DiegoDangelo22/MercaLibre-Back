@@ -4,7 +4,11 @@ import com.merca.back.dto.ColorDto;
 import com.merca.back.model.Color;
 import com.merca.back.security.controller.Mensaje;
 import com.merca.back.service.ColorService;
+import java.math.BigInteger;
 import java.util.List;
+import java.util.Set;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +25,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class ColorController {
     @Autowired
     ColorService colorService;
+    @Autowired
+    private EntityManager entityManager;
+    
+    @GetMapping("/autoincrement")
+    public Integer getAutoincrement() {
+        Query query = entityManager.createNativeQuery("SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'merca' AND TABLE_NAME = 'color'");
+        return ((BigInteger) query.getSingleResult()).intValue();
+    }
     
     @GetMapping("/lista")
-    public ResponseEntity<List<Color>> list() {
-        List<Color> list = colorService.list();
+    public ResponseEntity<Set<Color>> list() {
+        Set<Color> list = colorService.list();
         return new ResponseEntity(list, HttpStatus.OK);
     }
     

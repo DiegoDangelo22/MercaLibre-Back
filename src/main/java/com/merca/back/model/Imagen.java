@@ -30,7 +30,7 @@ public class Imagen {
     @Fetch(FetchMode.JOIN)
     @ElementCollection(fetch = FetchType.EAGER)
     @ManyToMany(mappedBy = "colores")
-    private Set<Ropa> ropas = new HashSet<>();
+    private Set<Ropa> ropa = new HashSet<>();
 
     public Imagen() {}
 

@@ -1,8 +1,7 @@
 package com.merca.back.model;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
@@ -17,6 +16,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,7 +28,8 @@ import org.hibernate.annotations.FetchMode;
 @Entity
 @Table(name = "ropa")
 //@JsonIgnoreProperties({"colores"})
-public class Ropa {
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class Ropa implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -51,8 +52,12 @@ public class Ropa {
     private Set<Color> colores = new HashSet<>();
     @Fetch(FetchMode.JOIN)
     @ElementCollection(fetch = FetchType.EAGER)
+//    @JsonManagedReference
     @OneToMany(mappedBy = "ropa", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ImagenColor> imagenesColor = new ArrayList<>();
+
+//    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+//    @JsonIgnore
+    private Set<ImagenColor> imagenesColor = new HashSet<>();
 
     public Ropa() {}
 
