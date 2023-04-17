@@ -8,7 +8,6 @@ import com.merca.back.repository.RopaRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,7 @@ public class RopaService {
     Optional<Ropa> optionalRopa = ropaRepository.findById(id);
     if (optionalRopa.isPresent()) {
         Ropa ropa = optionalRopa.get();
-        Set<Color> colores = ropa.getColores();
+        List<Color> colores = ropa.getColores();
         colores.add(color);
         ropa.setColores(colores);
         ropaRepository.save(ropa);
@@ -33,8 +32,8 @@ public class RopaService {
 }
   
   
-  public Set<ImagenColor> findImagenesByRopaIdAndColorId(int ropaId, int colorId) {
-        return ropaRepository.findImagenesByRopaIdAndColorId(ropaId, colorId);
+  public List<ImagenColor> findImagenesByRopaId(int ropaId) {
+        return ropaRepository.findImagenesByRopaId(ropaId);
     }
 
     
@@ -54,7 +53,7 @@ public class RopaService {
         return ropaRepository.findByCategoriaId(categoriaId);
     }
     
-    public List<Ropa> findByColor(int colores) {
+    public List<Ropa> findByColor(Optional<Color> colores) {
         return ropaRepository.findByColores(colores);
     }
     

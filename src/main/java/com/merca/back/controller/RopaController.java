@@ -66,7 +66,8 @@ public class RopaController {
     
     @GetMapping("/por-color/{id}")
     public ResponseEntity<List<Ropa>> getByColor(@PathVariable int id) {
-        List<Ropa> ropas = ropaService.findByColor(id);
+        Optional<Color> color = colorService.getOne(id);
+        List<Ropa> ropas = ropaService.findByColor(color);
         return new ResponseEntity<>(ropas, HttpStatus.OK);
     }
     
@@ -188,7 +189,7 @@ for (Color color : ropaDto.getColores()) {
     colores.add(colorService.getOne(color.getId()).get());
 }
 
-Set<ImagenColor> imagenesColor = new HashSet<>();
+List<ImagenColor> imagenesColor = new ArrayList<>();
 
 for (ImagenColor imagenColorDto : ropaDto.getImagenesColor()) {
     // Verificar que la instancia de Color sea válida
@@ -222,32 +223,33 @@ return new ResponseEntity(new Mensaje("Ropa guardada correctamente"), HttpStatus
 }
 
 
-@PostMapping("/{id}/colores")
-public ResponseEntity<?> agregarColor(@PathVariable("id") int id, @RequestBody Color color) {
-  Optional<Ropa> optionalRopa = ropaService.getOne(id);
-  if (optionalRopa.isPresent()) {
-    Ropa ropa = optionalRopa.get();
-    Set<Ropa> ropas = new HashSet<>();
-    ropas.add(ropa);
-    color.setRopa(ropas); // establecer la relación inversa
-    colorService.save(color);
-//    ropa.getColores().add(color);
-    ropaService.save(ropa);
-    
-    // Obtener la lista de imágenes asociadas al color
-    Set<ImagenColor> imagenesColor = color.getImagenesColor();
-    
-    // Establecer la relación inversa entre el color y las imágenes
-    for (ImagenColor imagen : imagenesColor) {
-        imagen.setColor(color);
-        imagen.setRopa(ropa);
-        imagenColorService.save(imagen);
+@PutMapping("/{id}/imagen-color")
+public ResponseEntity<?> agregarColor(@PathVariable("id") int id, @RequestBody ImagenColor imagenColor) {
+    Optional<Ropa> optionalRopa = ropaService.getOne(id);
+    if (optionalRopa.isPresent()) {
+        Ropa ropa = optionalRopa.get();
+
+        // Crear el color y guardarlo en la base de datos
+        Color newColor = new Color(imagenColor.getColor().getNombre(), imagenColor.getColor().getHexadecimal());
+        colorService.save(newColor);
+
+        // Crear la imagen asociada al color y guardarla en la base de datos
+        ImagenColor newImagenColor = new ImagenColor(imagenColor.getNombre(), newColor, ropa);
+        imagenColorService.save(newImagenColor);
+
+        // Establecer la relación inversa entre el color y las imágenes
+//        imagenColor.setColor(color);
+//        imagenColorService.save(imagenColor);
+
+        // Actualizar la lista de imágenes y la lista de colores de la ropa
+        ropa.getColores().add(newColor);
+        ropa.getImagenesColor().add(newImagenColor);
+        ropaService.save(ropa);
+
+        return ResponseEntity.ok(ropa);
+    } else {
+        return ResponseEntity.notFound().build();
     }
-    
-    return ResponseEntity.ok(ropa);
-  } else {
-    return ResponseEntity.notFound().build();
-  }
 }
 
 
@@ -277,15 +279,15 @@ public ResponseEntity<Map<String, Object>> detail(@PathVariable int id) {
     Ropa ropa = ropaService.getOne(id).get();
     
     // Obtener imágenes del color de la ropa
-    if (!ropa.getColores().isEmpty()) {
-        Color color = ropa.getColores().iterator().next();
-        Set<ImagenColor> imagenesColor = ropaService.findImagenesByRopaIdAndColorId(ropa.getId(), color.getId());
-        ropa.setImagenesColor(new HashSet<>(imagenesColor));
-    }
+//    if (!ropa.getColores().isEmpty()) {
+//        Color color = ropa.getColores().iterator().next();
+        List<ImagenColor> imagenesColor = ropaService.findImagenesByRopaId(ropa.getId());
+        ropa.setImagenesColor(new ArrayList<>(imagenesColor));
+//    }
     
-    Map<String, Object> response = new HashMap<>();
-    response.put("ropa", ropa);
-    return new ResponseEntity(response, HttpStatus.OK);
+//    Map<String, Object> response = new HashMap<>();
+//    response.put("ropa", ropa);
+    return new ResponseEntity(ropa, HttpStatus.OK);
 }
 
     
@@ -304,6 +306,8 @@ public ResponseEntity<Map<String, Object>> detail(@PathVariable int id) {
     
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") int id) {
+        List<ImagenColor> imagenRopa = imagenColorService.getImagenesColorByRopaId(id);
+        imagenColorService.delete(imagenRopa);
         ropaService.delete(id);
         return new ResponseEntity(new Mensaje("Ropa eliminada correctamente"), HttpStatus.OK);
     }

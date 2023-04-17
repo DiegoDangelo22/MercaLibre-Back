@@ -1,10 +1,9 @@
 package com.merca.back.model;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.CascadeType;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -16,12 +15,13 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 @Getter
 @Setter
@@ -42,22 +42,23 @@ public class Ropa implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;
-    @Fetch(FetchMode.JOIN)
-    @ElementCollection(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SUBSELECT)
+//    @ElementCollection(fetch = FetchType.LAZY)
     @ManyToMany(cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(
         name = "ropa_color",
         joinColumns = @JoinColumn(name = "ropa_id"),
         inverseJoinColumns = @JoinColumn(name = "color_id"))
-    private Set<Color> colores = new HashSet<>();
+    private List<Color> colores = new ArrayList<>();
     @Fetch(FetchMode.JOIN)
-    @ElementCollection(fetch = FetchType.EAGER)
+//    @ElementCollection(fetch = FetchType.LAZY)
 //    @JsonManagedReference
     @OneToMany(mappedBy = "ropa", cascade = CascadeType.ALL, orphanRemoval = true)
-
+    @LazyCollection(LazyCollectionOption.FALSE)
 //    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 //    @JsonIgnore
-    private Set<ImagenColor> imagenesColor = new HashSet<>();
+    private List<ImagenColor> imagenesColor = new ArrayList<>();
 
     public Ropa() {}
 

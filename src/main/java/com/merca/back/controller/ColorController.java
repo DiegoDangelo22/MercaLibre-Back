@@ -35,8 +35,8 @@ public class ColorController {
     }
     
     @GetMapping("/lista")
-    public ResponseEntity<Set<Color>> list() {
-        Set<Color> list = colorService.list();
+    public ResponseEntity<List<Color>> list() {
+        List<Color> list = colorService.list();
         return new ResponseEntity(list, HttpStatus.OK);
     }
     

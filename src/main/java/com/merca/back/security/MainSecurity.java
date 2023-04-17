@@ -1,5 +1,6 @@
 package com.merca.back.security;
 
+import com.merca.back.security.entity.Usuario;
 import com.merca.back.security.jwt.JwtEntryPoint;
 import com.merca.back.security.jwt.JwtTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;

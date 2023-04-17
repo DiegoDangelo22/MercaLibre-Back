@@ -23,6 +23,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 @Getter
 @Setter
@@ -37,13 +39,17 @@ public class Color implements Serializable {
     @NotNull
     private String hexadecimal;
     @Fetch(FetchMode.JOIN)
-    @ElementCollection(fetch = FetchType.EAGER)
+//    @ElementCollection(fetch = FetchType.EAGER)
+//    @ManyToMany(mappedBy = "colores", fetch = FetchType.EAGER)
     @ManyToMany(mappedBy = "colores")
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
     private Set<Ropa> ropa = new HashSet<>();
     @Fetch(FetchMode.JOIN)
-    @ElementCollection(fetch = FetchType.EAGER)
+//    @ElementCollection(fetch = FetchType.EAGER)
+//    @OneToMany(mappedBy = "color", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @OneToMany(mappedBy = "color", cascade = CascadeType.ALL, orphanRemoval = true)
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
 //        @JsonIgnoreProperties({"ropas", "color"})
     

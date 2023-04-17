@@ -34,4 +34,8 @@ public class ImagenColorService {
     public Optional<ImagenColor> getOne(int id) {
         return imagenColorRepository.findById(id);
     }
+    
+    public void delete(List<ImagenColor> imagenColor) {
+        imagenColorRepository.deleteAllInBatch(imagenColor);
+    }
 }

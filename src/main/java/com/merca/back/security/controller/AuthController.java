@@ -70,7 +70,8 @@ public class AuthController {
             return new ResponseEntity(new Mensaje("Campos obligatorios"), HttpStatus.BAD_REQUEST);
         if(!usuarioService.existsByNombreUsuario(loginUsuario.getNombreUsuario()))
             return new ResponseEntity(new Mensaje("Ese usuario no existe"), HttpStatus.BAD_REQUEST);
-        if(!usuarioService.existsByNombreUsuario(loginUsuario.getPassword()))
+        Usuario usuarios = usuarioService.getByNombreUsuario(loginUsuario.getNombreUsuario());
+        if(!passwordEncoder.matches(loginUsuario.getPassword(), usuarios.getPassword()))
             return new ResponseEntity(new Mensaje("Contraseña incorrecta"), HttpStatus.BAD_REQUEST);
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginUsuario.getNombreUsuario(), loginUsuario.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);

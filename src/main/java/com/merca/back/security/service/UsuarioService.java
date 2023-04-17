@@ -16,7 +16,7 @@ public class UsuarioService {
     public Optional<Usuario> getUserById(int id) {
         return usuarioRepository.findById(id);
     }
-    public Optional<Usuario> getByNombreUsuario(String nombreUsuario) {
+    public Usuario getByNombreUsuario(String nombreUsuario) {
         return usuarioRepository.findByNombreUsuario(nombreUsuario);
     }
     public Optional<Usuario> getByPassword(String password) {
