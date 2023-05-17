@@ -4,6 +4,7 @@ import com.merca.back.dto.RopaDto;
 import com.merca.back.model.Color;
 import com.merca.back.model.ImagenColor;
 import com.merca.back.model.Ropa;
+import com.merca.back.model.Talle;
 import com.merca.back.repository.RopaRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,12 +31,18 @@ public class RopaService {
         // Manejo del caso en que no se encuentre la ropa con el id dado
     }
 }
-  
-  
+
   public List<ImagenColor> findImagenesByRopaId(int ropaId) {
         return ropaRepository.findImagenesByRopaId(ropaId);
     }
 
+  public List<Ropa> findByTalle(int talleId) {
+      return ropaRepository.findByTalle(talleId);
+  }
+  
+  public List<Ropa> findProductsByPriceRange(int minPrice, int maxPrice) {
+        return ropaRepository.findByPriceBetween(minPrice, maxPrice);
+    }
     
     public List<Ropa> list() {
         return ropaRepository.findAll();

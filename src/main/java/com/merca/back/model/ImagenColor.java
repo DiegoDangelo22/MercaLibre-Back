@@ -45,12 +45,20 @@ public class ImagenColor implements Serializable {
       property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private Ropa ropa;
+    @ManyToOne
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JoinColumn(name = "talle_id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+      property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    private Talle talle;
 
     public ImagenColor() {}
 
-    public ImagenColor(String nombre, Color color, Ropa ropa) {
+    public ImagenColor(String nombre, Color color, Ropa ropa, Talle talle) {
         this.nombre = nombre;
         this.color = color;
         this.ropa = ropa;
+        this.talle = talle;
     }
 }

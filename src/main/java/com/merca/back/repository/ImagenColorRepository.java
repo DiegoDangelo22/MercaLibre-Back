@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ImagenColorRepository extends JpaRepository<ImagenColor, Integer> {
     List<ImagenColor> findByRopaId(int id);
+    public void deleteByColorId(int id);
 }

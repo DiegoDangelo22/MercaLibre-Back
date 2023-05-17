@@ -12,9 +12,9 @@ import com.merca.back.service.ImagenColorService;
 import com.merca.back.service.RopaColorService;
 //import com.merca.back.service.RopaColorService;
 import com.merca.back.service.RopaService;
+import com.merca.back.service.TalleService;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +24,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -71,6 +70,12 @@ public class RopaController {
         return new ResponseEntity<>(ropas, HttpStatus.OK);
     }
     
+    @GetMapping("/por-talle/{id}")
+    public ResponseEntity<List<Ropa>> getByTalle(@PathVariable int id) {
+        List<Ropa> ropas = ropaService.findByTalle(id);
+        return new ResponseEntity<>(ropas, HttpStatus.OK);
+    }
+    
     @GetMapping("/buscar")
     public List<RopaDto> buscarRopa2(@RequestParam String termino) {
         return ropaService.buscarRopa(termino);
@@ -80,6 +85,13 @@ public class RopaController {
     public ResponseEntity<List<RopaDto>> buscarRopa(@RequestBody String termino) {
         List<RopaDto> listaRopaDto = ropaService.buscarRopa(termino);
         return new ResponseEntity<>(listaRopaDto, HttpStatus.OK);
+    }
+    
+    @GetMapping("/por-precio-rango")
+    public List<Ropa> searchProductsByPriceRange(
+            @RequestParam("minPrice") int minPrice,
+            @RequestParam("maxPrice") int maxPrice) {
+        return ropaService.findProductsByPriceRange(minPrice, maxPrice);
     }
     
     @GetMapping("/lista")
@@ -198,7 +210,7 @@ for (ImagenColor imagenColorDto : ropaDto.getImagenesColor()) {
         Color color = colorService.getOne(imagenColorDto.getColor().getId()).orElse(null);
         if (color != null) {
             // Crear una instancia de ImagenColor y asignar la ropa y el color
-            ImagenColor imagenColor = new ImagenColor(imagenColorDto.getNombre(), color, ropa);
+            ImagenColor imagenColor = new ImagenColor(imagenColorDto.getNombre(), color, ropa, imagenColorDto.getTalle());
             imagenColor.setColor(color);
             imagenColor.setRopa(ropa);
             imagenesColor.add(imagenColor);
@@ -230,11 +242,11 @@ public ResponseEntity<?> agregarColor(@PathVariable("id") int id, @RequestBody I
         Ropa ropa = optionalRopa.get();
 
         // Crear el color y guardarlo en la base de datos
-        Color newColor = new Color(imagenColor.getColor().getNombre(), imagenColor.getColor().getHexadecimal());
-        colorService.save(newColor);
+        Color newColor = colorService.getOne(imagenColor.getColor().getId()).orElseThrow();
+//        colorService.save(newColor);
 
         // Crear la imagen asociada al color y guardarla en la base de datos
-        ImagenColor newImagenColor = new ImagenColor(imagenColor.getNombre(), newColor, ropa);
+        ImagenColor newImagenColor = new ImagenColor(imagenColor.getNombre(), newColor, ropa, imagenColor.getTalle());
         imagenColorService.save(newImagenColor);
 
         // Establecer la relación inversa entre el color y las imágenes

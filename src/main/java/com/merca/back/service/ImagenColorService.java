@@ -38,4 +38,8 @@ public class ImagenColorService {
     public void delete(List<ImagenColor> imagenColor) {
         imagenColorRepository.deleteAllInBatch(imagenColor);
     }
+    
+    public void deleteByColorId(int id) {
+        imagenColorRepository.deleteByColorId(id);
+    }
 }
