@@ -12,7 +12,6 @@ import com.merca.back.service.ImagenColorService;
 import com.merca.back.service.RopaColorService;
 //import com.merca.back.service.RopaColorService;
 import com.merca.back.service.RopaService;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -52,7 +51,7 @@ public class RopaController {
     
     @GetMapping("/autoincrement")
     public Integer getAutoincrement() {
-        Query query = entityManager.createNativeQuery("SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'merca' AND TABLE_NAME = 'ropa'");
+        Query query = entityManager.createNativeQuery("SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'bnfsluep8dytqqnrj8v9' AND TABLE_NAME = 'ropa'");
         return ((Long) query.getSingleResult()).intValue();
     }
     

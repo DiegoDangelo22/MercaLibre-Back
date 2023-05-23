@@ -6,7 +6,6 @@ import com.merca.back.security.controller.Mensaje;
 import com.merca.back.service.ColorService;
 import com.merca.back.service.ImagenColorService;
 import com.merca.back.service.RopaColorService;
-import java.math.BigInteger;
 import java.util.List;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -37,7 +36,7 @@ public class ColorController {
     
     @GetMapping("/autoincrement")
     public Integer getAutoincrement() {
-        Query query = entityManager.createNativeQuery("SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'merca' AND TABLE_NAME = 'color'");
+        Query query = entityManager.createNativeQuery("SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'bnfsluep8dytqqnrj8v9' AND TABLE_NAME = 'color'");
         return ((Long) query.getSingleResult()).intValue();
     }
     
