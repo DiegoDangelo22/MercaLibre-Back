@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/ropa")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = {"http://localhost:4200","https://mercalibre-365b2.web.app"})
 public class RopaController {
     @Autowired
     RopaService ropaService;
