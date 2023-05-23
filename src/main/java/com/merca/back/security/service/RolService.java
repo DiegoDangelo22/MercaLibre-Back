@@ -3,7 +3,7 @@ package com.merca.back.security.service;
 import com.merca.back.security.entity.Rol;
 import com.merca.back.security.enums.RolNombre;
 import com.merca.back.security.repository.RolRepository;
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

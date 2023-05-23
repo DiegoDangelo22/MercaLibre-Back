@@ -4,13 +4,14 @@ import com.merca.back.dto.RopaDto;
 import com.merca.back.model.Color;
 import com.merca.back.model.ImagenColor;
 import com.merca.back.model.Ropa;
-import com.merca.back.model.Talle;
 import com.merca.back.repository.RopaRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -44,8 +45,9 @@ public class RopaService {
         return ropaRepository.findByPriceBetween(minPrice, maxPrice);
     }
     
-    public List<Ropa> list() {
-        return ropaRepository.findAll();
+    public Page<Ropa> list(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return ropaRepository.findAll(pageRequest);
     }
     
     public List<RopaDto> buscarRopa(String termino) {

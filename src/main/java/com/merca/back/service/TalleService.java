@@ -1,10 +1,9 @@
 package com.merca.back.service;
 
-import com.merca.back.model.Ropa;
 import com.merca.back.model.Talle;
 import com.merca.back.repository.TalleRepository;
 import java.util.List;
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

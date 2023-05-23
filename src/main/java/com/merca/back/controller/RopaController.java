@@ -12,17 +12,16 @@ import com.merca.back.service.ImagenColorService;
 import com.merca.back.service.RopaColorService;
 //import com.merca.back.service.RopaColorService;
 import com.merca.back.service.RopaService;
-import com.merca.back.service.TalleService;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -54,7 +53,7 @@ public class RopaController {
     @GetMapping("/autoincrement")
     public Integer getAutoincrement() {
         Query query = entityManager.createNativeQuery("SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'merca' AND TABLE_NAME = 'ropa'");
-        return ((BigInteger) query.getSingleResult()).intValue();
+        return ((Long) query.getSingleResult()).intValue();
     }
     
     @GetMapping("/por-categoria/{id}")
@@ -95,10 +94,11 @@ public class RopaController {
     }
     
     @GetMapping("/lista")
-    public ResponseEntity<List<Ropa>> list() {
-        List<Ropa> list = ropaService.list();
-        return new ResponseEntity(list, HttpStatus.OK);
+    public ResponseEntity<Page<Ropa>> list(@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size) {
+        Page<Ropa> ropaPage = ropaService.list(page, size);
+        return new ResponseEntity<>(ropaPage, HttpStatus.OK);
     }
+
     
 //    @PostMapping("/create")
 //public ResponseEntity<?> create(@RequestBody RopaDto ropaDto) {
@@ -287,20 +287,15 @@ public ResponseEntity<?> agregarColor(@PathVariable("id") int id, @RequestBody I
 //    }
     
     @GetMapping("/detail/{id}")
-public ResponseEntity<Map<String, Object>> detail(@PathVariable int id) {
-    Ropa ropa = ropaService.getOne(id).get();
-    
-    // Obtener imágenes del color de la ropa
-//    if (!ropa.getColores().isEmpty()) {
-//        Color color = ropa.getColores().iterator().next();
+public ResponseEntity<?> detail(@PathVariable int id) {
+        Ropa ropa = ropaService.getOne(id).get();
+
         List<ImagenColor> imagenesColor = ropaService.findImagenesByRopaId(ropa.getId());
         ropa.setImagenesColor(new ArrayList<>(imagenesColor));
-//    }
-    
-//    Map<String, Object> response = new HashMap<>();
-//    response.put("ropa", ropa);
-    return new ResponseEntity(ropa, HttpStatus.OK);
+
+        return new ResponseEntity<>(ropa, HttpStatus.OK);
 }
+
 
     
     @PutMapping("/update/{id}")

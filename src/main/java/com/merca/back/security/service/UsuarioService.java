@@ -2,7 +2,7 @@ package com.merca.back.security.service;
 
 import com.merca.back.security.entity.Usuario;
 import com.merca.back.security.repository.UsuarioRepository;
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

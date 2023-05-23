@@ -8,8 +8,8 @@ import com.merca.back.service.ImagenColorService;
 import com.merca.back.service.RopaColorService;
 import java.math.BigInteger;
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +38,7 @@ public class ColorController {
     @GetMapping("/autoincrement")
     public Integer getAutoincrement() {
         Query query = entityManager.createNativeQuery("SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'merca' AND TABLE_NAME = 'color'");
-        return ((BigInteger) query.getSingleResult()).intValue();
+        return ((Long) query.getSingleResult()).intValue();
     }
     
     @GetMapping("/lista")
