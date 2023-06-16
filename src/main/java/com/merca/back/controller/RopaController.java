@@ -4,21 +4,21 @@ import com.merca.back.dto.RopaDto;
 import com.merca.back.model.Color;
 import com.merca.back.model.ImagenColor;
 import com.merca.back.model.Ropa;
-import com.merca.back.model.RopaColor;
+import com.merca.back.model.Talle;
 //import com.merca.back.model.RopaColor;
 import com.merca.back.security.controller.Mensaje;
 import com.merca.back.service.ColorService;
 import com.merca.back.service.ImagenColorService;
-import com.merca.back.service.RopaColorService;
 //import com.merca.back.service.RopaColorService;
 import com.merca.back.service.RopaService;
+import com.merca.back.service.TalleService;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
+import java.util.HashSet;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -41,7 +41,7 @@ public class RopaController {
     @Autowired
     RopaService ropaService;
     @Autowired
-    RopaColorService ropaColorService;
+    TalleService talleService;
     @Autowired
     ColorService colorService;
     @Autowired
@@ -51,7 +51,7 @@ public class RopaController {
     
     @GetMapping("/autoincrement")
     public Integer getAutoincrement() {
-        Query query = entityManager.createNativeQuery("SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'bnfsluep8dytqqnrj8v9' AND TABLE_NAME = 'ropa'");
+        Query query = entityManager.createNativeQuery("SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'merca' AND TABLE_NAME = 'ropa'");
         return ((Long) query.getSingleResult()).intValue();
     }
     
@@ -181,57 +181,31 @@ public class RopaController {
     
 @PostMapping(value = "/create")
 public ResponseEntity<?> create(@RequestBody RopaDto ropaDto) {
-    // Crear la instancia de Ropa
     Ropa ropa = new Ropa(ropaDto.getNombre(), ropaDto.getDescripcion(), ropaDto.getPrecio(), ropaDto.getCategoria());
+    ropaService.save(ropa);
+    
+    List<Color> colorList = new ArrayList<>();
+    Color color0 = colorService.getOne(ropaDto.getColores().get(0).getId()).orElse(null);
+    colorList.add(color0);
+    ropa.setColores(colorList);
 
-    // Guardar la ropa en la base de datos
-ropaService.save(ropa);
-
-// Obtener los colores asociados a la prenda
-Set<Color> colores = new HashSet<>();
-//for (Color color3 : ropaDto.getColores()) {
-//    System.out.println("ID del color: " + color3.getId());
-//    System.out.println("NOMBRE DEL COLOR" + color3.getNombre());
-//}
-//for(ImagenColor imagenColor : ropaDto.getImagenesColor()) {
-//    System.out.println(imagenColor.getNombre());
-//}
-for (Color color : ropaDto.getColores()) {
-    colores.add(colorService.getOne(color.getId()).get());
-}
-
-List<ImagenColor> imagenesColor = new ArrayList<>();
-
-for (ImagenColor imagenColorDto : ropaDto.getImagenesColor()) {
-    // Verificar que la instancia de Color sea válida
-    if (imagenColorDto.getColor() != null) {
-        // Obtener el color asociado a la imagen
+    List<ImagenColor> imagenesColor = new ArrayList<>();
+    for (ImagenColor imagenColorDto : ropaDto.getImagenesColor()) {
         Color color = colorService.getOne(imagenColorDto.getColor().getId()).orElse(null);
-        if (color != null) {
-            // Crear una instancia de ImagenColor y asignar la ropa y el color
-            ImagenColor imagenColor = new ImagenColor(imagenColorDto.getNombre(), color, ropa, imagenColorDto.getTalle());
-            imagenColor.setColor(color);
-            imagenColor.setRopa(ropa);
+        Talle talle = talleService.getOne(imagenColorDto.getTalle().getId()).orElse(null);
+        if (color != null && talle != null) {
+            ImagenColor imagenColor = new ImagenColor(imagenColorDto.getNombre(), color, ropa, talle);
             imagenesColor.add(imagenColor);
-            // Guardar la instancia de ImagenColor en la base de datos
             imagenColorService.save(imagenColor);
         }
     }
+    ropa.setImagenesColor(imagenesColor);
+
+    ropaService.save(ropa);
+
+    return new ResponseEntity<>(new Mensaje("Ropa guardada correctamente"), HttpStatus.OK);
 }
 
-// Asignar el conjunto de imágenes de la prenda y guardar la instancia de Ropa en la base de datos
-ropa.setImagenesColor(imagenesColor);
-ropaService.save(ropa);
-
-
-// Crear una instancia de RopaColor por cada color y guardarla en la base de datos
-for (Color color : colores) {
-    RopaColor ropaColor = new RopaColor(ropa, color);
-    ropaColorService.save(ropaColor);
-}
-
-return new ResponseEntity(new Mensaje("Ropa guardada correctamente"), HttpStatus.OK);
-}
 
 
 @PutMapping("/{id}/imagen-color")

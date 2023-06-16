@@ -2,13 +2,17 @@ package com.merca.back.controller;
 
 import com.merca.back.dto.ColorDto;
 import com.merca.back.model.Color;
+import com.merca.back.model.ImagenColor;
+import com.merca.back.model.Ropa;
 import com.merca.back.security.controller.Mensaje;
 import com.merca.back.service.ColorService;
 import com.merca.back.service.ImagenColorService;
 import com.merca.back.service.RopaColorService;
+import com.merca.back.service.RopaService;
 import java.util.List;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,13 +34,15 @@ public class ColorController {
     @Autowired
     RopaColorService ropaColorService;
     @Autowired
+    RopaService ropaService;
+    @Autowired
     ImagenColorService imagenColorService;
     @Autowired
     private EntityManager entityManager;
     
     @GetMapping("/autoincrement")
     public Integer getAutoincrement() {
-        Query query = entityManager.createNativeQuery("SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'bnfsluep8dytqqnrj8v9' AND TABLE_NAME = 'color'");
+        Query query = entityManager.createNativeQuery("SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'merca' AND TABLE_NAME = 'color'");
         return ((Long) query.getSingleResult()).intValue();
     }
     
@@ -55,8 +61,28 @@ public class ColorController {
     
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") int id) {
-        ropaColorService.deleteByColorId(id);
-        imagenColorService.deleteByColorId(id);
+        List<Ropa> ropas = ropaService.lista();
+
+        for(Ropa ropa: ropas) {
+            List<Color> colores = ropa.getColores();
+            List<ImagenColor> imgClrs = ropa.getImagenesColor();
+            for(Color color: colores) {
+                for(ImagenColor imgClr: imgClrs) {
+                    int ropaId = imgClr.getRopa().getId();
+
+                    if(color.getId() == id && imgClrs.size() == 1) {
+                        ropaColorService.deleteByColorId(id);
+                        imagenColorService.deleteByColorId(id);
+                        colorService.delete(id);
+                        ropaService.delete(ropaId);
+                    } else if(color.getId() == id && imgClrs.size() >= 1) {
+                        ropaColorService.deleteByColorId(id);
+                        imagenColorService.deleteByColorId(id);
+                        colorService.delete(id);
+                    }
+                }
+            }
+        }
         colorService.delete(id);
         return new ResponseEntity(new Mensaje("Color eliminado correctamente"), HttpStatus.OK);
     }

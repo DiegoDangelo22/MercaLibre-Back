@@ -5,10 +5,11 @@ import com.merca.back.model.Color;
 import com.merca.back.model.ImagenColor;
 import com.merca.back.model.Ropa;
 import com.merca.back.repository.RopaRepository;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import jakarta.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Service;
 public class RopaService {
     @Autowired
     RopaRepository ropaRepository;
-   
+    
   public void agregarColor(int id, Color color) {
     Optional<Ropa> optionalRopa = ropaRepository.findById(id);
     if (optionalRopa.isPresent()) {
@@ -48,6 +49,10 @@ public class RopaService {
     public Page<Ropa> list(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         return ropaRepository.findAll(pageRequest);
+    }
+    
+    public List<Ropa> lista() {
+        return ropaRepository.findAll();
     }
     
     public List<RopaDto> buscarRopa(String termino) {

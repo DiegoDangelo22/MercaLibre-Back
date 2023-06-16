@@ -3,6 +3,7 @@ package com.merca.back.model;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import jakarta.persistence.CascadeType;
 import java.io.Serializable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,7 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.LazyCollection;
@@ -33,7 +34,7 @@ public class ImagenColor implements Serializable {
     @JoinColumn(name = "color_id")
 //    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-      property = "id")
+      property = "id", scope = Color.class)
     @JsonIdentityReference(alwaysAsId = true)
     private Color color;
 //    @ManyToOne(fetch = FetchType.LAZY)
@@ -42,14 +43,14 @@ public class ImagenColor implements Serializable {
     @JoinColumn(name = "ropa_id")
 //@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-      property = "id")
+      property = "id", scope = Ropa.class)
     @JsonIdentityReference(alwaysAsId = true)
     private Ropa ropa;
     @ManyToOne
     @LazyCollection(LazyCollectionOption.FALSE)
     @JoinColumn(name = "talle_id")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-      property = "id")
+      property = "id", scope = Talle.class)
     @JsonIdentityReference(alwaysAsId = true)
     private Talle talle;
 

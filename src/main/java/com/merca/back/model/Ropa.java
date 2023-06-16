@@ -1,6 +1,5 @@
 package com.merca.back.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +15,9 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import javax.validation.constraints.NotNull;
+import java.util.HashSet;
+import java.util.Set;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Fetch;
@@ -43,7 +44,7 @@ public class Ropa implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;
-    @Fetch(FetchMode.SUBSELECT)
+    @Fetch(FetchMode.SELECT)
 //    @ElementCollection(fetch = FetchType.LAZY)
     @ManyToMany(cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
@@ -52,7 +53,7 @@ public class Ropa implements Serializable {
         joinColumns = @JoinColumn(name = "ropa_id"),
         inverseJoinColumns = @JoinColumn(name = "color_id"))
     private List<Color> colores = new ArrayList<>();
-    @Fetch(FetchMode.SUBSELECT)
+    @Fetch(FetchMode.JOIN)
 //    @ElementCollection(fetch = FetchType.LAZY)
 //    @JsonManagedReference
     @OneToMany(mappedBy = "ropa", cascade = CascadeType.ALL, orphanRemoval = true)

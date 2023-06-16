@@ -24,11 +24,11 @@ public class RopaColorService {
         return ropaColorRepository.findById(id);
     }
     
-    public List<RopaColor> findByRopa(int ropa) {
-        return ropaColorRepository.findByRopa(ropa);
+    public List<RopaColor> findByRopaId(int ropaId) {
+        return ropaColorRepository.findByRopaId(ropaId);
     }
     
-    public List<RopaColor> findByColor(int color) {
-        return ropaColorRepository.findByColor(color);
+    public List<RopaColor> findByColorId(int colorId) {
+        return ropaColorRepository.findByColorId(colorId);
     }
 }

@@ -23,6 +23,10 @@ public class ImagenColorService {
         return imagenColorRepository.findByRopaId(id);
     }
     
+    public List<ImagenColor> getImagenesColorByColorId(int id) {
+        return imagenColorRepository.findByColorId(id);
+    }
+    
     public void save(ImagenColor imagenColor) {
         imagenColorRepository.save(imagenColor);
     }

@@ -12,7 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Fetch;
@@ -32,14 +32,14 @@ public class Color implements Serializable {
     private String nombre;
     @NotNull
     private String hexadecimal;
-    @Fetch(FetchMode.JOIN)
+    @Fetch(FetchMode.SELECT)
 //    @ElementCollection(fetch = FetchType.EAGER)
 //    @ManyToMany(mappedBy = "colores", fetch = FetchType.EAGER)
     @ManyToMany(mappedBy = "colores")
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
     private Set<Ropa> ropa = new HashSet<>();
-    @Fetch(FetchMode.JOIN)
+    @Fetch(FetchMode.SELECT)
 //    @ElementCollection(fetch = FetchType.EAGER)
 //    @OneToMany(mappedBy = "color", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @OneToMany(mappedBy = "color", cascade = CascadeType.ALL, orphanRemoval = true)

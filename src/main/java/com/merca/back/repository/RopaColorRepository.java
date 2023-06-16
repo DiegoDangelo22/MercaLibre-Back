@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RopaColorRepository extends JpaRepository<RopaColor, Integer> {
     public List<RopaColor> findById(int id);
-    public List<RopaColor> findByRopa(int ropa);
-    public List<RopaColor> findByColor(int color);
+    public List<RopaColor> findByRopaId(int ropaId);
+    public List<RopaColor> findByColorId(int colorId);
     public void deleteByColorId(int id);
 }
