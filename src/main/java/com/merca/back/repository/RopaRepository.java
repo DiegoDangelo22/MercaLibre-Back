@@ -17,6 +17,7 @@ public interface RopaRepository extends JpaRepository<Ropa, Integer> {
     public Optional<Ropa> findByNombre(String nombreRopa);
     public List<Ropa> findByCategoriaId(int categoriaId);
     public List<Ropa> findByColores(Optional<Color> colores);
+    public List<Ropa> findByOrden(int ordenId);
     public List<Ropa> findByNombreContainingIgnoreCase(String termino);
     public boolean existsByNombre(String nombreRopa);
     @Override
@@ -33,4 +34,7 @@ public interface RopaRepository extends JpaRepository<Ropa, Integer> {
     
     @Query("SELECT r FROM Ropa r WHERE r.precio >= :minPrice AND r.precio <= :maxPrice")
     List<Ropa> findByPriceBetween(int minPrice, int maxPrice);
+    
+    @Query("SELECT MAX(r.orden) + 1 FROM Ropa r")
+    Integer obtenerSiguienteOrden();
 }

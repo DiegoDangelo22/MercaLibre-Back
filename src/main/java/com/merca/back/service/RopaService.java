@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.Optional;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -45,9 +45,17 @@ public class RopaService {
   public List<Ropa> findProductsByPriceRange(int minPrice, int maxPrice) {
         return ropaRepository.findByPriceBetween(minPrice, maxPrice);
     }
+  
+  public Integer obtenerSiguienteOrden() {
+      return ropaRepository.obtenerSiguienteOrden();
+  }
+  
+  public List<Ropa> findByOrden(int ordenId) {
+      return ropaRepository.findByOrden(ordenId);
+  }
     
     public Page<Ropa> list(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("orden"));
         return ropaRepository.findAll(pageRequest);
     }
     

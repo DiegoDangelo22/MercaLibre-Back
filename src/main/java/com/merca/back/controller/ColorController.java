@@ -42,7 +42,7 @@ public class ColorController {
     
     @GetMapping("/autoincrement")
     public Integer getAutoincrement() {
-        Query query = entityManager.createNativeQuery("SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'bnfsluep8dytqqnrj8v9' AND TABLE_NAME = 'color'");
+        Query query = entityManager.createNativeQuery("SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'merca' AND TABLE_NAME = 'color'");
         return ((Long) query.getSingleResult()).intValue();
     }
     

@@ -1,6 +1,7 @@
 package com.merca.back.controller;
 
 import com.merca.back.dto.RopaDto;
+import com.merca.back.dto.UpdateOrdenDto;
 import com.merca.back.model.Color;
 import com.merca.back.model.ImagenColor;
 import com.merca.back.model.Ropa;
@@ -17,8 +18,6 @@ import java.util.List;
 import java.util.Optional;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
-import java.util.HashSet;
-import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -51,7 +50,7 @@ public class RopaController {
     
     @GetMapping("/autoincrement")
     public Integer getAutoincrement() {
-        Query query = entityManager.createNativeQuery("SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'bnfsluep8dytqqnrj8v9' AND TABLE_NAME = 'ropa'");
+        Query query = entityManager.createNativeQuery("SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'merca' AND TABLE_NAME = 'ropa'");
         return ((Long) query.getSingleResult()).intValue();
     }
     
@@ -97,87 +96,6 @@ public class RopaController {
         Page<Ropa> ropaPage = ropaService.list(page, size);
         return new ResponseEntity<>(ropaPage, HttpStatus.OK);
     }
-
-    
-//    @PostMapping("/create")
-//public ResponseEntity<?> create(@RequestBody RopaDto ropaDto) {
-//    Ropa ropa = new Ropa(ropaDto.getNombre(), ropaDto.getDescripcion(), ropaDto.getPrecio(), ropaDto.getCategoria());
-//System.out.println("Nombre: " + ropaDto.getNombre());
-//System.out.println("Descripción: " + ropaDto.getDescripcion());
-//System.out.println("Precio: " + ropaDto.getPrecio());
-//System.out.println("Categoría: " + ropaDto.getCategoria().getId());
-////System.out.println("Colores: " + Arrays.toString(ropaDto.getColores().toArray()));
-//for (Color color : ropaDto.getColores()) {
-//    System.out.println("ID del color: " + color.getId());
-//    System.out.println("NOMBRE DEL COLOR" + color.getNombre());
-//    System.out.println("HEXA DEL COLOR" + color.getHexadecimal());
-//}
-//
-//
-//    // Guardar la ropa en la base de datos
-//        ropaService.save(ropa);
-//
-//    // Obtener los colores asociados a la prenda
-//    Set<Color> colores = new HashSet<>();
-//    for (Color color : ropaDto.getColores()) {
-//        colores.add(colorService.getOne(color.getId()).get());
-//    }
-//
-//    // Crear una instancia de RopaColor por cada color y guardarla en la base de datos
-//    for (Color color : colores) {
-//        RopaColor ropaColor = new RopaColor(ropa, color);
-//        ropaColorService.save(ropaColor);
-//    }
-//
-//// Obtener las imágenes asociadas a cada color de la prenda
-//for (Color color : colores) {
-//    Optional<Color> optionalColor = ropaDto.getColores().stream().filter(c -> c.equals(color)).findFirst();
-//    if (optionalColor.isPresent()) {
-//        Color colorDto = optionalColor.get();
-//        Set<ImagenColor> imagenesColor = new HashSet<>();
-//        for (ImagenColor imagenColor : colorDto.getImagenesColor()) {
-//            if (imagenColor.getColor().equals(color)) {
-//                imagenesColor.add(new ImagenColor(imagenColor.getNombre(), color));
-//            }
-//        }
-//        color.setImagenesColor(imagenesColor);
-//    }
-//}
-//
-//
-//
-//
-//
-//    // Guardar la lista de imágenes asociadas a cada color de la prenda en la base de datos
-//    for (Color color : colores) {
-//        for (ImagenColor imagenColor : color.getImagenesColor()) {
-//            imagenColor.setColor(color);
-////            imagenColorService.save(imagenColor);
-//        }
-//    }
-//    
-//    // Obtener la instancia actualizada de la ropa desde la base de datos
-//     ropa = ropaService.getByNombre(ropa.getNombre()).orElseThrow(() -> new RuntimeException("No se pudo encontrar la ropa con el nombre especificado"));
-//
-//// Iterar sobre los colores y las imágenes asociadas a la prenda
-//Ropa finalRopa = ropa;
-//for (Color color : colores) {
-//    for (ImagenColor imagenColorDto : color.getImagenesColor().stream().filter(i -> i.getRopa() != null && Integer.valueOf(i.getRopa().getId()).equals(finalRopa.getId())).collect(Collectors.toList())) {
-//    
-//
-//// Verificar que la instancia de Color sea válida
-//    if (imagenColorDto.getColor() != null && imagenColorDto.getColor().getId() == color.getId()) {
-//        // Crear una instancia de ImagenColor y asignar la ropa
-//        ImagenColor imagenColor = new ImagenColor(imagenColorDto.getNombre(), imagenColorDto.getColor());
-//        imagenColor.setRopa(ropa);
-//        
-////         Guardar la instancia de ImagenColor en la base de datos
-//        imagenColorService.save(imagenColor);
-//    }
-//}}
-//    return new ResponseEntity(new Mensaje("Ropa guardada correctamente"), HttpStatus.OK);
-//}
-    
     
 @PostMapping(value = "/create")
 public ResponseEntity<?> create(@RequestBody RopaDto ropaDto) {
@@ -200,13 +118,28 @@ public ResponseEntity<?> create(@RequestBody RopaDto ropaDto) {
         }
     }
     ropa.setImagenesColor(imagenesColor);
+    ropa.setOrden(ropaService.obtenerSiguienteOrden());
 
     ropaService.save(ropa);
 
     return new ResponseEntity<>(new Mensaje("Ropa guardada correctamente"), HttpStatus.OK);
 }
 
-
+@PutMapping("/update-orden")
+public ResponseEntity<?> updateOrden(@RequestBody UpdateOrdenDto request) {
+    int draggedOrden = request.getDraggedOrden();
+    int targetOrden = request.getTargetOrden();
+    List<Ropa> draggedProduct = ropaService.findByOrden(draggedOrden);
+    List<Ropa> targetProduct = ropaService.findByOrden(targetOrden);
+    
+    draggedProduct.get(0).setOrden(targetOrden);
+    targetProduct.get(0).setOrden(draggedOrden);
+    
+    ropaService.save(draggedProduct.get(0));
+    ropaService.save(targetProduct.get(0));
+    
+    return new ResponseEntity<>(new Mensaje("Orden actualizado correctamente"), HttpStatus.OK);
+}
 
 @PutMapping("/{id}/imagen-color")
 public ResponseEntity<?> agregarColor(@PathVariable("id") int id, @RequestBody ImagenColor imagenColor) {
