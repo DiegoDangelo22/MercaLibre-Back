@@ -50,7 +50,7 @@ public class RopaController {
     
     @GetMapping("/autoincrement")
     public Integer getAutoincrement() {
-        Query query = entityManager.createNativeQuery("SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'merca' AND TABLE_NAME = 'ropa'");
+        Query query = entityManager.createNativeQuery("SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'bnfsluep8dytqqnrj8v9' AND TABLE_NAME = 'ropa'");
         return ((Long) query.getSingleResult()).intValue();
     }
     
@@ -112,7 +112,7 @@ public ResponseEntity<?> create(@RequestBody RopaDto ropaDto) {
         Color color = colorService.getOne(imagenColorDto.getColor().getId()).orElse(null);
         Talle talle = talleService.getOne(imagenColorDto.getTalle().getId()).orElse(null);
         if (color != null && talle != null) {
-            ImagenColor imagenColor = new ImagenColor(imagenColorDto.getNombre(), color, ropa, talle);
+            ImagenColor imagenColor = new ImagenColor(imagenColorDto.getNombre(), color, ropa, talle, imagenColorDto.getStock());
             imagenesColor.add(imagenColor);
             imagenColorService.save(imagenColor);
         }
@@ -152,7 +152,7 @@ public ResponseEntity<?> agregarColor(@PathVariable("id") int id, @RequestBody I
 //        colorService.save(newColor);
 
         // Crear la imagen asociada al color y guardarla en la base de datos
-        ImagenColor newImagenColor = new ImagenColor(imagenColor.getNombre(), newColor, ropa, imagenColor.getTalle());
+        ImagenColor newImagenColor = new ImagenColor(imagenColor.getNombre(), newColor, ropa, imagenColor.getTalle(), imagenColor.getStock());
         imagenColorService.save(newImagenColor);
 
         // Establecer la relación inversa entre el color y las imágenes

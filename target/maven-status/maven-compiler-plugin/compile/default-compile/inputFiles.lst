@@ -3,6 +3,7 @@ C:\Users\Diego\Desktop\MercaLibre\Back\src\main\java\com\merca\back\dto\Categori
 C:\Users\Diego\Desktop\MercaLibre\Back\src\main\java\com\merca\back\service\ColorService.java
 C:\Users\Diego\Desktop\MercaLibre\Back\src\main\java\com\merca\back\security\jwt\JwtEntryPoint.java
 C:\Users\Diego\Desktop\MercaLibre\Back\src\main\java\com\merca\back\service\RopaColorService.java
+C:\Users\Diego\Desktop\MercaLibre\Back\src\main\java\com\merca\back\dto\UpdateOrdenDto.java
 C:\Users\Diego\Desktop\MercaLibre\Back\src\main\java\com\merca\back\repository\CategoriaRepository.java
 C:\Users\Diego\Desktop\MercaLibre\Back\src\main\java\com\merca\back\service\CategoriaService.java
 C:\Users\Diego\Desktop\MercaLibre\Back\src\main\java\com\merca\back\security\enums\RolNombre.java
