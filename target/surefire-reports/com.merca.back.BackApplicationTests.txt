@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.merca.back.BackApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 129.537 s - in com.merca.back.BackApplicationTests
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 131.332 s - in com.merca.back.BackApplicationTests
